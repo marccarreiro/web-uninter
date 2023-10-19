@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Gabriel Possomato</title>
+</head>
+<body>
+  <header>
+    <h1>Gabriel B. Possomato</h1>
+    <nav>
+      <ul>
+        <li class="style-none"><a href="/" onclick="rota()">home</a></li>
+        <li class="style-none"><a href="/sobre" onclick="rota()">sobre mim</a></li>
+        <li class="style-none"><a href="/educacao" onclick="rota()">educação</a></li>
+        <li class="style-none"><a href="https://possomato.vercel.app/" target="_blank">portfolio</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="app"></div> <!-- Cria um espaço vazio para carregar conteúdo dinamicamente -->
+  <script>
+    const app = document.querySelector('.app')  // Seleciona o elemento com a classe "app"
+
+    const rotas = { // define as rotas para as páginas
+      "/": "pages/home.html",
+      "/sobre": "pages/sobre.html",
+      "/educacao": "pages/educacao.html"
+    }
+
+    function rota(evento){
+      evento = evento || window.event  // Garante que o evento seja válido
+      evento.preventDefault()  // Impede o comportamento padrão de um clique em link
+
+      window.history.pushState({}, "", evento.target.href)  // Atualiza a URL sem recarregar a página
+
+      manipula()  // Chama a função que manipula a rota
+    }
+
+    function manipula(){
+      const { pathname } = window.location  // Obtém o caminho da URL
+      const rota = rotas[pathname]  // Encontra a rota correspondente ao caminho
+
+      fetch(rota)
+        .then((dados) => dados.text())  // Obtém o conteúdo da rota como texto
+        .then((html) => app.innerHTML = html)  // Atualiza o conteúdo dinâmico na página com o HTML obtido
+    }
+
+    manipula()  // Inicializa a manipulação de rota quando a página carrega
+
+    window.onpopstate = () => manipula()
+  </script>
+
+</body>
+</html>
